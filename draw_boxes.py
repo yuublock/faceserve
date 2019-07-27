@@ -60,6 +60,4 @@ def draw_boxes(known_image, unknown_image):
 
     # Remove the drawing library from memory as per the Pillow docs
     del draw
-
-    pil_image.save("image_with_boxes.jpg")
     return pil_image

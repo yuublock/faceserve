@@ -79,6 +79,7 @@ def detect_faces_in_image(file_stream):
 
     if is_known:
         boxed = draw_boxes(img, unknown_image)
+        boxed.save("image_with_boxes.jpg")
 
     # Return the result as json
     result = {
