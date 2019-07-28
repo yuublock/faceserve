@@ -92,6 +92,15 @@ def downloadToServer():
         shutil.copyfileobj(response.raw, f)
     return response.content
 
+@app.route('/usemetoupload', methods=['POST'])
+def upload():
+    files = request.data
+    print(files)
+    session = requests.Session()
+    # response = session.post('/upload')
+    # print(dir(response))
+    return 'should be good'
+
 @app.route('/goose', methods=['GET'])
 def getGoose():
     with open("./mario.jpeg", 'rb') as bites:
