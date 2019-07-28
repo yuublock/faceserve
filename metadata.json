@@ -1,0 +1,12 @@
+{
+  "objects": [{
+      "properties": {
+          "enaio:objectTypeId": {
+              "value": "document"
+          }
+      },
+      "contentStreams": [{
+          "cid": "mario"
+      }]
+  }]
+}

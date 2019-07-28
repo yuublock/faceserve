@@ -10,15 +10,19 @@
 #  "face_found_in_image": true,
 #  "is_picture_of_known": true
 # }
-
+import io
+import shutil
+import requests
 import face_recognition
-from flask import Flask, jsonify, request, redirect, send_file
+from draw_boxes import draw_boxes
+from flask import Flask, jsonify, request, redirect, send_file, session
 from PIL import Image, ImageDraw
 import numpy as np
-from draw_boxes import draw_boxes
-
+import json
+from config import *
 # You can change this to any folder on your system
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
 
 app = Flask(__name__)
 
@@ -54,7 +58,48 @@ def upload_image():
       <input type="submit" value="Upload">
     </form>
     '''
+@app.route('/upload', methods=['POST'])
+def uploadToYuuvis():
+    baseUrl = 'https://api.yuuvis.io/dms/objects'
+    header_name = 'Content-Type'
+    # headerDict['Content-Type'] = 'multipart/form-data, application/x-www-form-urlencoded'
+    headerDict = {}
+    paramDict = {}
+    header_name = 'Ocp-Apim-Subscription-Key'
+    headerDict['Ocp-Apim-Subscription-Key'] = YKEY
+    session = requests.Session()
+    contentFilePath = './image_with_boxes.jpg'
+    metaDataFilePath = './metadata.json'
+    multipart_form_data = {
+        'data' :('metadata.json', open(metaDataFilePath, 'rb'), 'application/json'),
+        'mario' : ('image_with_boxes.jpg', open(contentFilePath, 'rb'), 'application/jpeg')
+    }
+    response = session.post(baseUrl, files=multipart_form_data, headers=headerDict)
+    print(response.json())
+    return response.json()
 
+@app.route('/download', methods=['GET'])
+def downloadToServer():
+    headerDict = {}
+    paramDict = {}
+    baseUrl = 'https' + '://' + 'api.yuuvis.io'
+    headerDict['Ocp-Apim-Subscription-Key'] = YKEY
+    session = requests.Session()
+   
+    response = session.get(str(baseUrl+'/dms/objects/59408323-3063-4217-9ca7-661519b08b4a/contents/file'), stream=True,headers=headerDict)
+    with open('./mario.jpeg', 'wb') as f:
+        img = response.raw.decode_content = True
+        shutil.copyfileobj(response.raw, f)
+    return response.content
+
+@app.route('/goose', methods=['GET'])
+def getGoose():
+    with open("./mario.jpeg", 'rb') as bites:
+        return send_file(
+                     io.BytesIO(bites.read()),
+                     attachment_filename='mario.jpeg',
+                     mimetype='image/jpg'
+               )
 
 def detect_faces_in_image(file_stream):
     # Load the uploaded image file
@@ -90,4 +135,5 @@ def detect_faces_in_image(file_stream):
     return send_file("image_with_boxes.jpg", mimetype='image/jpeg')
 
 if __name__ == "__main__":
+    app.secret_key = 'mario'
     app.run(host='0.0.0.0', port=5001, debug=True)
