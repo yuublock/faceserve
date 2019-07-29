@@ -11,10 +11,12 @@
 #  "is_picture_of_known": true
 # }
 import io
+from draw_boxes import draw_boxes
+from util import processImage
 import shutil
 import requests
 import face_recognition
-from draw_boxes import draw_boxes
+from flask_cors import CORS, cross_origin
 from flask import Flask, jsonify, request, redirect, send_file, session
 from PIL import Image, ImageDraw
 import numpy as np
@@ -25,7 +27,13 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 
 app = Flask(__name__)
-
+CORS(app, resources={r"/*": {"origins": "*"}})
+# CORS(app)
+app.config['CORS_HEADERS'] = "Content-Type"
+# @app.after_request
+# def add_headers(response):
+#     response.headers.add('Access-Control-Allow-Origin', '*')
+#     response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -37,9 +45,12 @@ def upload_image():
     # Check if a valid image file was uploaded
     if request.method == 'POST':
         if 'file' not in request.files:
+            print('not there')
             return redirect(request.url)
 
         file = request.files['file']
+        print('files')
+        print(file)
 
         if file.filename == '':
             return redirect(request.url)
@@ -47,7 +58,7 @@ def upload_image():
         if file and allowed_file(file.filename):
             # The image file seems valid! Detect faces and return the result.
             return detect_faces_in_image(file)
-
+        
     # If no valid image file was uploaded, show the file upload form:
     return '''
     <!doctype html>
@@ -93,13 +104,33 @@ def downloadToServer():
     return response.content
 
 @app.route('/usemetoupload', methods=['POST'])
+# @cross_origin(origin = '*')
 def upload():
-    files = request.data
-    print(files)
-    session = requests.Session()
+    response = jsonify({'some':'data'})
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    # del request.form.headers['Content-Type']
+
+    
+    # print(dir(request.files))
+    # print(file)
+    # file = request.files['picture']
+    print('picture')
+    # print(file.read())
+    # print(request.data)
+    # print(dir(request),'!!!')
+    # for keys in request.files:
+    #     print(keys + ':' + request.files.keys)
+    
+    # session = requests.Session()
     # response = session.post('/upload')
     # print(dir(response))
-    return 'should be good'
+    # print(request.form['file'])
+    # print(request.form.getlist('file'))
+    v = request.files.get('file')
+    processImage(v)
+    print(v)
+    # return response,201
+    return response, 201
 
 @app.route('/goose', methods=['GET'])
 def getGoose():
