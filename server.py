@@ -35,6 +35,7 @@ app.config['CORS_HEADERS'] = "Content-Type"
 #     response.headers.add('Access-Control-Allow-Origin', '*')
 #     response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
 
+
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -142,37 +143,9 @@ def getGoose():
                )
 
 def detect_faces_in_image(file_stream):
-    # Load the uploaded image file
-    img = face_recognition.load_image_file(file_stream)
-
-    # Pre-calculated face encoding of the uploaded image generated with face_recognition.face_encodings(img)
-    known_face_encoding = face_recognition.face_encodings(img)
-
-    # Get face encodings for any faces in the image to censor
-    unknown_image = face_recognition.load_image_file('images/unknown.jpg')
-    unknown_face_encodings = face_recognition.face_encodings(unknown_image)
-
-    face_found = False
-    is_known = False
-
-    if len(unknown_face_encodings) > 0:
-        face_found = True
-        # See if the first face in the uploaded image matches the known face
-        match_results = face_recognition.compare_faces([known_face_encoding], unknown_face_encodings[0])
-        if match_results[0].any():
-            is_known = True
-
-    if is_known:
-        boxed = draw_boxes(img, unknown_image)
-        boxed.save("image_with_boxes.jpg")
-
-    # Return the result as json
-    result = {
-        "face_found_in_image": face_found,
-        "is_picture_of_known": is_known
-    }
+    processImage(file_stream)
     # return jsonify(result)
-    return send_file("image_with_boxes.jpg", mimetype='image/jpeg')
+    return send_file("image_dwith_boxkes.jpg", mimetype='image/jpeg')
 
 if __name__ == "__main__":
     app.secret_key = 'mario'

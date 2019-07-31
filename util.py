@@ -1,6 +1,7 @@
 import requests
 import face_recognition
 import io
+from config import *
 from draw_boxes import draw_boxes 
 
 # def uploadToYuuvis(files):
@@ -22,22 +23,18 @@ from draw_boxes import draw_boxes
 #     print(response.json())
 #     return response.json()
 
-# def foo():
-#   print('mario')
-
 def processImage(file_stream):
     # Load the uploaded image file
     print('maridjfkdj')
     # file_stream = openk(files, 'rb')
     # file_stream = io.BytesIO(files)
-    # print(dir(file_stream))
     img = face_recognition.load_image_file(file_stream)
 
     # Pre-calculated face encoding of the uploaded image generated with face_recognition.face_encodings(img)
     known_face_encoding = face_recognition.face_encodings(img)
 
     # Get face encodings for any faces in the image to censor
-    unknown_image = face_recognition.load_image_file('images/unknown.jpg')
+    unknown_image = face_recognition.load_image_file(GROUP_PHOTO_PATH)
     unknown_face_encodings = face_recognition.face_encodings(unknown_image)
 
     face_found = False
