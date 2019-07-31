@@ -12,6 +12,8 @@ As a user I want to subscribe to a service that I can upload my photo and any co
   * pyenv activate python365 (activate it) (deactivate it later if you dont needit)
 * pip install -r requirements.txt
 * set up a config.py and write `YKEY = "<your api key>"`
+  * in the same config.py write `GROUP_PHOTO_PATH = "<path>"`
+    * this will be the group photo you want to censor out.
 * ./start.sh (runs the server)
   * Routes will be on the faceserve README. when I have time to write it.
     * The main UI route is /usemetoupload (POST method)
@@ -35,6 +37,7 @@ to do.
 - [ ] Make the upload button appear only when 2 choices have selected
 - [ ] Rewrite The processImage python file to take in Group photo as a param.
 - [ ] Finish rewriting the dockerfiles to include in the UNIX way of creating and activating virtual environments for Python.
+- [ ] Improve the AI so you can train multiple photos and have better recognition.
 
 ## stretch goals
 - [ ] create a live mode where a local live camera feed will track your face and block it against a group photo you have. (TEST mode)
