@@ -1,7 +1,7 @@
 # How To Use
 As a user I want to subscribe to a service that I can upload my photo and any company that is part of this service will have their faces blocked.
 
-## Backend (FACE SERVER)
+## Backend (FACE SERVER) (Non Docker version)
 (this is a rough draft from memory)
 * Requirements Python 3.6.5
   * install pyenv somehow.
@@ -17,7 +17,11 @@ As a user I want to subscribe to a service that I can upload my photo and any co
 * ./start.sh (runs the server)
   * Routes will be on the faceserve README. when I have time to write it.
     * The main UI route is /usemetoupload (POST method)
-
+## BackEnd (FACE SERVER) (Dockerized version) 
+* `docker build . -t <nameofimage>`
+* `docker run --rm -d -p 5001:5001 --name <nameofcontainer> <nameofimage>`
+* localhost:5001 now has all your pipeline.
+* [ ] ticket 2: create a bash script and npm package a update/restart container script.
 ## FrontEnd (YUUBLOCK)
 * npm install (8 onwards will work. i'll set up an nvmrc later)
 * npm run start (development build)
@@ -36,7 +40,7 @@ to do.
 - [ ] Submit the Group photo and the Censor photo only when both are ready
 - [ ] Make the upload button appear only when 2 choices have selected
 - [ ] Rewrite The processImage python file to take in Group photo as a param.
-- [ ] Finish rewriting the dockerfiles to include in the UNIX way of creating and activating virtual environments for Python.
+- [x] Finish rewriting the dockerfiles to include in the UNIX way of creating and activating virtual environments for Python.
 - [ ] Improve the AI so you can train multiple photos and have better recognition.
 
 ## stretch goals
@@ -51,3 +55,4 @@ CORS, FormDATA, xhr vs fetch vs axios, limitations of python modules
 
 Special thanks to Tim for creating this great Gatsby Material Starter Kit.
 Gatsby Material Kit React Starter is the adaptation of [Material Kit React](https://www.creative-tim.com/product/material-kit-react) to [Gatsby](https://www.gatsbyjs.org/)
+

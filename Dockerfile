@@ -1,12 +1,20 @@
-FROM python:alpine3.7
-# ENTRYPOINT [ “/bin/bash”, “-c” ]
+FROM ubuntu:16.04
 
-COPY . /app
-WORKDIR /app
+RUN apt-get update -y --fix-missing
 
-RUN python3 -m venv env
+RUN apt-get install -y cmake 
+RUN apt-get install -y python3-pip
+RUN apt-get install -y python-virtualenv
 
-RUN echo 'source env/bin/activate'
-RUN echo 'pip install -r /app/requirements.txt'
+COPY . /
+WORKDIR /
+
+RUN virtualenv -p python3 mario
+
+RUN /bin/bash -c "source mario/bin/activate"
+
+
+# ADD $PWD/requirements.txt /requirements.txt
+RUN pip3 install -r /requirements.txt
 EXPOSE 5001
-CMD "python ./server.py"
+CMD ["python3", "server.py"]
